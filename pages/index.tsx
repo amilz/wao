@@ -18,7 +18,7 @@ const App = () => {
       )
     );
   };
-  
+
   useEffect(() => {
     if (isMobileDevice()) {
       window.location.href = "./og";
@@ -56,32 +56,35 @@ const App = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-  
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-    if (uploadedImage) {
-      const profileImage = new window.Image();
-      profileImage.src = URL.createObjectURL(uploadedImage);
-      profileImage.onload = () => {
-        const size = Math.min(profileImage.width, profileImage.height) * scale;
-        const x = (profileImage.width - size) / 2 + position.x;
-        const y = (profileImage.height - size) / 2 + position.y;
-        ctx.drawImage(profileImage, x, y, size, size);
-      };
-    }
-  
-    const knownImg = new window.Image();
-    knownImg.src = knownImage.src;
-    knownImg.onload = () => {
-      ctx.drawImage(knownImg, 0, 0, canvas.width, canvas.height);
+
+    const loadImage = (src: string) => {
+      return new Promise<HTMLImageElement>((resolve) => {
+        const img = new window.Image();
+        img.src = src;
+        img.onload = () => resolve(img);
+      });
     };
+
+    const [profileImage, knownImg] = await Promise.all([
+      uploadedImage ? loadImage(URL.createObjectURL(uploadedImage)) : null,
+      loadImage(knownImage.src),
+    ]);
+
+    if (profileImage) {
+      const size = Math.min(profileImage.width, profileImage.height) * scale;
+      const x = (profileImage.width - size) / 2 + position.x;
+      const y = (profileImage.height - size) / 2 + position.y;
+      ctx.drawImage(profileImage, x, y, size, size);
+    }
+
+    ctx.drawImage(knownImg, 0, 0, canvas.width, canvas.height);
   };
-  
-  
   useEffect(() => {
     drawProfileImage();
   }, [uploadedImage, position, scale]);
-  
+
   const copyImage = () => {
     if (!canvasRef.current) return;
     canvasRef.current.toBlob((blob) => {
