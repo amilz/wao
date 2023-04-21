@@ -10,7 +10,20 @@ const App = () => {
   const [scale, setScale] = useState(1);
   const [dragging, setDragging] = useState(false);
   const [lastMousePosition, setLastMousePosition] = useState({ x: 0, y: 0 });
-
+  const isMobileDevice = () => {
+    return (
+      typeof window.navigator !== "undefined" &&
+      /(Android|iPhone|iPad|iPod|BlackBerry|Windows Phone)/i.test(
+        window.navigator.userAgent
+      )
+    );
+  };
+  
+  useEffect(() => {
+    if (isMobileDevice()) {
+      window.location.href = "./og";
+    }
+  }, []);
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setUploadedImage(event.target.files[0]);
