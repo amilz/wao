@@ -59,16 +59,6 @@ const App = () => {
   
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-    drawUploadedImage(ctx);
-  
-    const knownImg = new window.Image();
-    knownImg.src = knownImage.src;
-    knownImg.onload = () => {
-      ctx.drawImage(knownImg, 0, 0, canvas.width, canvas.height);
-    };
-  };
-  
-  const drawUploadedImage = (ctx: CanvasRenderingContext2D) => {
     if (uploadedImage) {
       const profileImage = new window.Image();
       profileImage.src = URL.createObjectURL(uploadedImage);
@@ -79,7 +69,14 @@ const App = () => {
         ctx.drawImage(profileImage, x, y, size, size);
       };
     }
+  
+    const knownImg = new window.Image();
+    knownImg.src = knownImage.src;
+    knownImg.onload = () => {
+      ctx.drawImage(knownImg, 0, 0, canvas.width, canvas.height);
+    };
   };
+  
   
   useEffect(() => {
     drawProfileImage();
