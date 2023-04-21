@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import knownImage from '../public/known.png';
 import styles from '../styles/Home.module.css';
+import Link from 'next/link';
 
 const App = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -104,6 +105,16 @@ const App = () => {
         />
         {uploadedImage && <button className={styles.button} onClick={copyImage}>Copy Image</button>}
       </div>
+      <footer className={styles.footer}>
+        <a href="https://github.com/amilz/wao" target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+        <span className={styles.separator}> | </span>
+        <Link href="/og">
+          simple
+        </Link>
+      </footer>
+
     </div>
   );
 };
